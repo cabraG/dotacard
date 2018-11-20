@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cabra.dotacard.dao.ReferencesMapper" >
+
+  <resultMap id="ReferencesResultMap" type="cabra.dotacard.entity.References">
+    <id property="id" column="id"></id>
+    <result property="card_id" column="card_id"></result>
+    <result property="refertences_id" column="refertences_id"></result>
+    <result property="ref_type" column="ref_type"/>
+    <result property="count" column="count"/>
+  </resultMap>
+
+  <insert id="rdainit" parameterType="cabra.dotacard.entity.References" >
+    insert into artifact_references (card_id, refertences_id, ref_type,count)
+    values (#{references.refertences_id,jdbcType=NUMERIC}, #{references.card_id,jdbcType=NUMERIC}, #{references.ref_type,jdbcType=VARCHAR},#{references.count,jdbcType=NUMERIC}
+      )
+  </insert>
+  <select id="Searchbycid" parameterType="String" resultMap="ReferencesResultMap">
+    select card_id,refertences_id,ref_type,count from artifact_references where card_id= #{cid}
+  </select>
+</mapper>

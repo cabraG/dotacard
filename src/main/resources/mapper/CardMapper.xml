@@ -1,0 +1,152 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cabra.dotacard.dao.CardMapper" >
+  <resultMap id="BaseResultMap" type="cabra.dotacard.entity.Card" >
+    <id column="cardid" property="cardid" jdbcType="INTEGER" />
+    <result column="enname" property="enname" jdbcType="VARCHAR" />
+    <result column="zhname" property="zhname" jdbcType="VARCHAR" />
+    <result column="color" property="color" jdbcType="VARCHAR" />
+    <result column="cost" property="cost" jdbcType="INTEGER" />
+    <result column="bc" property="bc" jdbcType="VARCHAR" />
+    <result column="ec" property="ec" jdbcType="VARCHAR" />
+    <result column="zhdescribe" property="zhdescribe" jdbcType="VARCHAR" />
+    <result column="endescribe" property="endescribe" jdbcType="VARCHAR" />
+    <result column="rare" property="rare" jdbcType="INTEGER" />
+  </resultMap>
+  <sql id="Base_Column_List" >
+    cardid, enname, zhname, color, cost, bc, ec, zhdescribe, endescribe, rare
+  </sql>
+  <select id="selectByPrimaryKey" resultMap="BaseResultMap" parameterType="java.lang.Integer" >
+    select 
+    <include refid="Base_Column_List" />
+    from cards
+    where cardid = #{cardid,jdbcType=INTEGER}
+  </select>
+  <delete id="deleteByPrimaryKey" parameterType="java.lang.Integer" >
+    delete from cards
+    where cardid = #{cardid,jdbcType=INTEGER}
+  </delete>
+  <insert id="insert" parameterType="cabra.dotacard.entity.Card" >
+    insert into cards (cardid, enname, zhname, 
+      color, cost, bc, ec, 
+      zhdescribe, endescribe, rare
+      )
+    values (#{cardid,jdbcType=INTEGER}, #{enname,jdbcType=VARCHAR}, #{zhname,jdbcType=VARCHAR}, 
+      #{color,jdbcType=VARCHAR}, #{cost,jdbcType=INTEGER}, #{bc,jdbcType=VARCHAR}, #{ec,jdbcType=VARCHAR}, 
+      #{zhdescribe,jdbcType=VARCHAR}, #{endescribe,jdbcType=VARCHAR}, #{rare,jdbcType=INTEGER}
+      )
+  </insert>
+  <insert id="insertSelective" parameterType="cabra.dotacard.entity.Card" >
+    insert into cards
+    <trim prefix="(" suffix=")" suffixOverrides="," >
+      <if test="cardid != null" >
+        cardid,
+      </if>
+      <if test="enname != null" >
+        enname,
+      </if>
+      <if test="zhname != null" >
+        zhname,
+      </if>
+      <if test="color != null" >
+        color,
+      </if>
+      <if test="cost != null" >
+        cost,
+      </if>
+      <if test="bc != null" >
+        bc,
+      </if>
+      <if test="ec != null" >
+        ec,
+      </if>
+      <if test="zhdescribe != null" >
+        zhdescribe,
+      </if>
+      <if test="endescribe != null" >
+        endescribe,
+      </if>
+      <if test="rare != null" >
+        rare,
+      </if>
+    </trim>
+    <trim prefix="values (" suffix=")" suffixOverrides="," >
+      <if test="cardid != null" >
+        #{cardid,jdbcType=INTEGER},
+      </if>
+      <if test="enname != null" >
+        #{enname,jdbcType=VARCHAR},
+      </if>
+      <if test="zhname != null" >
+        #{zhname,jdbcType=VARCHAR},
+      </if>
+      <if test="color != null" >
+        #{color,jdbcType=VARCHAR},
+      </if>
+      <if test="cost != null" >
+        #{cost,jdbcType=INTEGER},
+      </if>
+      <if test="bc != null" >
+        #{bc,jdbcType=VARCHAR},
+      </if>
+      <if test="ec != null" >
+        #{ec,jdbcType=VARCHAR},
+      </if>
+      <if test="zhdescribe != null" >
+        #{zhdescribe,jdbcType=VARCHAR},
+      </if>
+      <if test="endescribe != null" >
+        #{endescribe,jdbcType=VARCHAR},
+      </if>
+      <if test="rare != null" >
+        #{rare,jdbcType=INTEGER},
+      </if>
+    </trim>
+  </insert>
+  <update id="updateByPrimaryKeySelective" parameterType="cabra.dotacard.entity.Card" >
+    update cards
+    <set >
+      <if test="enname != null" >
+        enname = #{enname,jdbcType=VARCHAR},
+      </if>
+      <if test="zhname != null" >
+        zhname = #{zhname,jdbcType=VARCHAR},
+      </if>
+      <if test="color != null" >
+        color = #{color,jdbcType=VARCHAR},
+      </if>
+      <if test="cost != null" >
+        cost = #{cost,jdbcType=INTEGER},
+      </if>
+      <if test="bc != null" >
+        bc = #{bc,jdbcType=VARCHAR},
+      </if>
+      <if test="ec != null" >
+        ec = #{ec,jdbcType=VARCHAR},
+      </if>
+      <if test="zhdescribe != null" >
+        zhdescribe = #{zhdescribe,jdbcType=VARCHAR},
+      </if>
+      <if test="endescribe != null" >
+        endescribe = #{endescribe,jdbcType=VARCHAR},
+      </if>
+      <if test="rare != null" >
+        rare = #{rare,jdbcType=INTEGER},
+      </if>
+    </set>
+    where cardid = #{cardid,jdbcType=INTEGER}
+  </update>
+  <update id="updateByPrimaryKey" parameterType="cabra.dotacard.entity.Card" >
+    update cards
+    set enname = #{enname,jdbcType=VARCHAR},
+      zhname = #{zhname,jdbcType=VARCHAR},
+      color = #{color,jdbcType=VARCHAR},
+      cost = #{cost,jdbcType=INTEGER},
+      bc = #{bc,jdbcType=VARCHAR},
+      ec = #{ec,jdbcType=VARCHAR},
+      zhdescribe = #{zhdescribe,jdbcType=VARCHAR},
+      endescribe = #{endescribe,jdbcType=VARCHAR},
+      rare = #{rare,jdbcType=INTEGER}
+    where cardid = #{cardid,jdbcType=INTEGER}
+  </update>
+</mapper>
