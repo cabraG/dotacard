@@ -10,7 +10,16 @@ public class OneCardData {
 
 
     private ValueCard main_card;
-    private String heroActiveName;
+
+    public ValueCard getHeroactiveskill() {
+        return heroactiveskill;
+    }
+
+    public void setHeroactiveskill(ValueCard heroactiveskill) {
+        this.heroactiveskill = heroactiveskill;
+    }
+
+    private ValueCard heroactiveskill;
     private ValueCard heropasstive;
     private List<ValueCard> otherref;
 
@@ -20,14 +29,6 @@ public class OneCardData {
 
     public void setMain_card(ValueCard main_card) {
         this.main_card = main_card;
-    }
-
-    public String getHeroActiveName() {
-        return heroActiveName;
-    }
-
-    public void setHeroActiveName(String heroActiveName) {
-        this.heroActiveName = heroActiveName;
     }
 
     public ValueCard getHeropasstive() {

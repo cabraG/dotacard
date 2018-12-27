@@ -1,5 +1,6 @@
 package cabra.dotacard.services;
 
+import cabra.dotacard.entity.OneCardData;
 import cabra.dotacard.entity.ValueCard;
 
 import java.util.List;
@@ -18,8 +19,8 @@ public interface ValueCardService {
      List<ValueCard> getCardList();
 
 
-    List<ValueCard> search(String input, List<String> ctype, ValueCard valueCard, List<String> RARITY);
+    List<ValueCard> search(String input, List<String> ctype, ValueCard valueCard, List<String> RARITY, List<String> item_type);
 
 
-    List<ValueCard> findbyimg(String cid);
+    OneCardData findbyimg(String cid);
 }

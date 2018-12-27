@@ -1,6 +1,7 @@
 package cabra.dotacard.controller;
 
 
+import cabra.dotacard.entity.OneCardData;
 import cabra.dotacard.entity.ValueCard;
 import cabra.dotacard.services.ValueCardService;
 import org.springframework.web.bind.annotation.*;
@@ -47,6 +48,7 @@ public class ValueCardController {
         List<String>  ctype= (ArrayList) params.get("ctype");
         List<String>  color= (ArrayList) params.get("color");
         List<String>  RARITY= (ArrayList) params.get("RARITY");
+        List<String>   item_type= (ArrayList)params.get("item_type");
         ValueCard valueCard=new ValueCard();
         for (String c:color){
             System.out.println(c);
@@ -65,12 +67,12 @@ public class ValueCardController {
             }
         }
 
-        return valueCardService.search(input,ctype,valueCard,RARITY);
+        return valueCardService.search(input,ctype,valueCard,RARITY,item_type);
     }
 
     @CrossOrigin(origins="*")//允许跨域请求
     @GetMapping(value="/searchbycid")
-    public List<ValueCard> findbyimg(String cid){
+    public OneCardData findbyimg(String cid){
 
         return valueCardService.findbyimg(cid);
 

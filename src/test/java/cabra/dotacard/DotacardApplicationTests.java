@@ -8,8 +8,11 @@ import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.alibaba.fastjson.JSONReader;
+import org.apache.tomcat.util.ExceptionUtils;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -20,8 +23,15 @@ import java.beans.PropertyDescriptor;
 import java.io.*;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.net.URLConnection;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.concurrent.*;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
@@ -33,7 +43,7 @@ public class DotacardApplicationTests {
     @Autowired
     private ReferencesMapper ReferencesMapper;
 
-    private static final String FILE_PATH = "C:\\Users\\Administrator\\Desktop\\png\\new_json.json";//new_json.json,test1.txt
+    private static final String FILE_PATH = "E:\\save\\projectsource\\dotacard\\card_set_0.0.json";//new_json.json,test1.txt,all_json,base_json
 
     @Test
     public void contextLoads() {
@@ -124,9 +134,114 @@ public void rdaotest(){
         return laststr;
     }
 
+    /**
+     * 从输入流中获取字节数组
+     * @param inputStream
+     * @return
+     * @throws IOException
+     */
+
+    public static  byte[] readInputStream(InputStream inputStream) throws IOException {
+        byte[] buffer = new byte[1024];
+        int len = 0;
+        ByteArrayOutputStream bos = new ByteArrayOutputStream();
+        while((len = inputStream.read(buffer)) != -1) {
+            bos.write(buffer, 0, len);
+        }
+        bos.close();
+        return bos.toByteArray();
+    }
+
+     /**
+     * 从网络Url中下载文件
+     * @param urlStr
+     * @param fileName
+     * @param savePath
+     * @throws IOException
+     */
+    public static void  downLoadFromUrl(String urlStr,String fileName,String savePath) throws IOException{
+        URL url = new URL(urlStr);
+        HttpURLConnection conn = (HttpURLConnection)url.openConnection();
+        //设置超时间为3秒
+        conn.setConnectTimeout(3*1000);
+        //防止屏蔽程序抓取而返回403错误
+        conn.setRequestProperty("User-Agent", "Mozilla/4.0 (compatible; MSIE 5.0; Windows NT; DigExt)");
+
+        //得到输入流
+        InputStream inputStream = conn.getInputStream();
+        //获取自己数组
+        byte[] getData = readInputStream(inputStream);
+
+        //文件保存位置
+        File saveDir = new File(savePath);
+        if(!saveDir.exists()){
+            saveDir.mkdir();
+        }
+        File file = new File(saveDir+File.separator+fileName);
+        FileOutputStream fos = new FileOutputStream(file);
+        fos.write(getData);
+        if(fos!=null){
+            fos.close();
+        }
+        if(inputStream!=null){
+            inputStream.close();
+        }
+
+
+        System.out.println("info:"+url+" download success");
+
+    }
+
+
+
+
+
+    public static String getMatcher(String regex, String source) {
+        String result = "";
+        Pattern pattern = Pattern.compile(regex);
+        Matcher matcher = pattern.matcher(source);
+        while (matcher.find()) {
+            result = matcher.group(0);
+        }
+        return result;
+    }
+
+
+
+    @Test
+    public void urldowldtest() {
+      String[] urlarry=  valueCardMapper.getimageurl();
+        for(String url:urlarry){
+    String str = url;
+    String pattern = "(\\w+_){2}\\w+";
+    String newpattren="(?<=set0./)\\d+";
+    String result =getMatcher(newpattren,str)+".jpg";
+        try{
+            byte[] by1 = FileDownConnManager.fileDown(url);
+
+            File saveDir = new File("E:\\1webfront\\dotacard\\src\\images\\artifact\\mini");
+            if(!saveDir.exists()){
+                saveDir.mkdir();
+            }
+            File file = new File(saveDir+File.separator+result);
+            FileOutputStream fos = new FileOutputStream(file);
+            fos.write(by1);
+            if(fos!=null){
+                fos.close();
+            }
+            /*downLoadFromUrl(str,
+                    result,"E:\\1webfront\\dotacard\\src\\images\\artifact");*/
+        }catch (Exception e) {
+            // TODO: handle exception
+            System.out.println(e);
+        }
+
+        }
+    }
+
     @Test
     public void jsondeal(){
-        String filepath="C:\\Users\\Administrator\\Desktop\\png\\test3.txt";
+        String filepath="E:\\save\\projectsource\\dotacard\\card_set_1.1.json";
         String jsonContent = ReadFile(filepath);
 
 
@@ -174,6 +289,7 @@ public void rdaotest(){
     }
 
     @Test
+    //读入大量数据使用reader的方式，不会一次载入内存，效率较高。实现失败。先使用parsearr的方式
     public void ReadWithFastJson() throws FileNotFoundException {
 
 

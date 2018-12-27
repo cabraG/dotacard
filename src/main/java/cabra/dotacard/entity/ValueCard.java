@@ -75,6 +75,10 @@ public class ValueCard {
 
     private List<References> references ;
 
+
+
+    private ValueCard includecard;
+
     public boolean isIs_black() {
         return is_black;
     }
@@ -230,4 +234,11 @@ public class ValueCard {
     }
 
 
+    public ValueCard getIncludecard() {
+        return includecard;
+    }
+
+    public void setIncludecard(ValueCard includecard) {
+        this.includecard = includecard;
+    }
 }

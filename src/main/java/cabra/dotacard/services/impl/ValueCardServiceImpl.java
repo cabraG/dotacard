@@ -25,16 +25,49 @@ public class ValueCardServiceImpl implements ValueCardService {
 
     @Override
     public List<ValueCard> getCardList() {
-        return valueCardMapper.getCardList();
+List<ValueCard> valueCardList=new ArrayList<>();
+        for (ValueCard valueCard:valueCardMapper.getCardList()){
+            if(valueCard.getCard_type().equals("Hero")){
+           for(References ref:referencesMapper.Searchbycid(String.valueOf(valueCard.getCard_id()))){
+               if(ref.getRef_type().equals("includes")){
+                   valueCard.setIncludecard(
+                           valueCardMapper.findbycid(
+                                   String.valueOf(ref.getRefertences_id()
+                                   )));
+               }
+
+           }
+
+            }
+            valueCardList.add(valueCard);
+        }
+        return valueCardList;
+    }
+    @Override
+    public List<ValueCard> search(String input, List<String> ctype, ValueCard valueCard, List<String> RARITY, List<String> item_type) {
+        List<ValueCard> valueCardList=new ArrayList<>();
+
+        for (ValueCard valueCard1:valueCardMapper.search(input,ctype,valueCard,RARITY,item_type)){
+            if(valueCard1.getCard_type().equals("Hero")){
+                for(References ref:referencesMapper.Searchbycid(String.valueOf(valueCard1.getCard_id()))){
+                    if(ref.getRef_type().equals("includes")){
+                        valueCard1.setIncludecard(
+                                valueCardMapper.findbycid(
+                                        String.valueOf(ref.getRefertences_id()
+                                        )));
+                    }
+
+                }
+
+            }
+            valueCardList.add(valueCard1);
+        }
+
+        return valueCardList;
     }
 
     @Override
-    public List<ValueCard> search(String input, List<String> ctype, ValueCard valueCard, List<String> RARITY) {
-        return valueCardMapper.search(input,ctype,valueCard,RARITY);
-    }
-
-    @Override
-    public List<ValueCard> findbyimg(String cid) {
+    public OneCardData findbyimg(String cid) {
         List<ValueCard> valueCardList=new ArrayList<>();
         valueCardList.add(valueCardMapper.findbycid(cid));
         if(referencesMapper.Searchbycid(cid)!=null || referencesMapper.Searchbycid(cid).size()!=0 ) {
@@ -75,15 +108,17 @@ public class ValueCardServiceImpl implements ValueCardService {
         List<ValueCard> valueCardli_reset=new ArrayList<>();
         for(int i=1;i<valueCardList.size();i++){
             if(valueCardList.get(i).getCard_type().equals("Ability")){
-                oneCardData.setHeroActiveName(valueCardList.get(i).getCard_name().getEnglish());
+                oneCardData.setHeroactiveskill(valueCardList.get(i));
             }
-            if(valueCardList.get(i).getCard_type().equals("Passive Ability")){
+            else if(valueCardList.get(i).getCard_type().equals("Passive Ability")){
+                oneCardData.setHeropasstive(valueCardList.get(i));
 
             }
+            else
             valueCardli_reset.add(valueCardList.get(i));
         }
-       //封裝
+       //封裝数据bean方便jsonobject
         oneCardData.setOtherref(valueCardli_reset);
-        return valueCardList;
+        return oneCardData;
     }
 }

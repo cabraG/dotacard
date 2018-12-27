@@ -31,23 +31,29 @@
     insert into artifact_card (card_id, base_card_id, card_type,
       card_name_en, card_text_en, card_name_zh,card_text_zh,mini_image, large_image,
       ingame_image, illustrator, rarity,is_blue,is_red,is_black,is_green,
-      item_def,attack,hit_points,gold_cost,armor,sub_type,mana_cost
+      item_def,attack,hit_points,gold_cost,armor,sub_type,mana_cost,is_crosslane
       )
     values (#{valueCard.card_id,jdbcType=INTEGER}, #{valueCard.base_card_id,jdbcType=INTEGER}, #{valueCard.card_type,jdbcType=VARCHAR},
       #{valueCard.card_name.english,jdbcType=VARCHAR}, #{valueCard.card_text.english,jdbcType=INTEGER},
         #{valueCard.card_name.schinese,jdbcType=VARCHAR}, #{valueCard.card_text.schinese,jdbcType=VARCHAR},
-       #{valueCard.mini_image.schinese,jdbcType=VARCHAR},
-      #{valueCard.large_image.schinese,jdbcType=VARCHAR},#{valueCard.ingame_image.schinese,jdbcType=VARCHAR},
+       #{valueCard.mini_image.default,jdbcType=VARCHAR},
+      #{valueCard.large_image.schinese,jdbcType=VARCHAR},#{valueCard.ingame_image.default,jdbcType=VARCHAR},
       #{valueCard.illustrator,jdbcType=VARCHAR}, #{valueCard.numrarity,jdbcType=INTEGER},
       #{valueCard.is_blue,jdbcType=BOOLEAN},#{valueCard.is_red,jdbcType=BOOLEAN},
       #{valueCard.is_black,jdbcType=BOOLEAN},#{valueCard.is_green,jdbcType=BOOLEAN},#{valueCard.item_def,jdbcType=INTEGER},
       #{valueCard.attack,jdbcType=INTEGER},#{valueCard.hit_points,jdbcType=INTEGER},#{valueCard.gold_cost,jdbcType=INTEGER},
-      #{valueCard.armor,jdbcType=INTEGER},#{valueCard.sub_type,jdbcType=VARCHAR},#{valueCard.mana_cost,jdbcType=INTEGER}
+      #{valueCard.armor,jdbcType=INTEGER},#{valueCard.sub_type,jdbcType=VARCHAR},#{valueCard.mana_cost,jdbcType=INTEGER},
+      #{valueCard.is_crosslane,jdbcType=BOOLEAN}
       )
   </insert>
 
   <select id="getCardList" parameterType="cabra.dotacard.entity.ValueCard" resultMap="ValueCardResultMap">
        SELECT * FROM `artifact_card` WHERE `card_type` != 'Ability' and `card_type`!= 'Pathing' and `card_type`!='Stronghold' and `card_type`!='Passive Ability'
+  </select>
+
+
+  <select id="getimageurl" resultType="String">
+    SELECT mini_image FROM `artifact_card` WHERE `card_type` != 'Ability' and `card_type`!= 'Pathing' and `card_type`!='Stronghold' and `card_type`!='Passive Ability'
   </select>
 
   <select id="findbycid" parameterType="String" resultMap="ValueCardResultMap">
@@ -87,6 +93,14 @@
         #{type}
       </foreach>
     </if>
+
+    <if test="item_type!=null and item_type.size>0">
+      and sub_type in
+      <foreach item="sub" collection="item_type" separator="," open="(" close=")">
+        #{sub}
+      </foreach>
+    </if>
+
     <if test="RARITY!=null and RARITY.size>0">
       and rarity in
       <foreach item="rarit" collection="RARITY" separator="," open="(" close=")">

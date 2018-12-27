@@ -17,6 +17,8 @@ public interface ValueCardMapper {
     List<ValueCard> search(@Param("input")String input,
                            @Param("ctype")List<String> ctype
             , @Param("color")ValueCard color
-            , @Param("RARITY")List<String> RARITY);
+            , @Param("RARITY")List<String> RARITY,
+                           @Param("item_type")List<String> item_type);
     ValueCard findbycid(@Param("cid")String cid);
+    String[] getimageurl();
 }
